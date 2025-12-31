@@ -3,35 +3,55 @@ from google.auth.transport.requests import AuthorizedSession
 import json
 
 # Configuration
-target_url = 'https://domain.pk/products/crane-sli-safe-load-indicator'
+target_url = "https://domain.pk/products/crane-sli-safe-load-indicator"
 JSON_KEY_FILE = "credentials.json"
+
+# Paste your full JSON content inside these triple quotes
+JSON_KEY_STRING = """
+{
+  "type": "service_account",
+  "project_id": "your-project-id",
+  "private_key_id": "your-private-key-id",
+  "private_key": "-----BEGIN PRIVATE KEY-----\\n...\\n-----END PRIVATE KEY-----\\n",
+  "client_email": "your-service-account-email@your-project.iam.gserviceaccount.com",
+  "client_id": "your-client-id",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/your-email"
+}
+"""
 
 # Note: The new library expects a LIST of scopes, not a string
 SCOPES = ["https://www.googleapis.com/auth/indexing"]
 ENDPOINT = "https://indexing.googleapis.com/v3/urlNotifications:publish"
 
 try:
+    # 1. Parse the JSON string into a Python Dictionary
+    key_dict = json.loads(JSON_KEY_STRING)
+
     # 1. Load and Authorize Credentials
     # We use from_service_account_file instead of from_json_keyfile_name
-    credentials = service_account.Credentials.from_service_account_file(
-        JSON_KEY_FILE, 
-        scopes=SCOPES
+    # credentials = service_account.Credentials.from_service_account_file(
+    #     JSON_KEY_FILE,
+    #     scopes=SCOPES
+    # )
+
+    credentials = service_account.Credentials.from_service_account_info(
+        key_dict, scopes=SCOPES
     )
 
     # 2. Build the Authorized Session
-    # This replaces credentials.authorize(httplib2.Http()). 
+    # This replaces credentials.authorize(httplib2.Http()).
     # It acts exactly like a standard 'requests' session but handles auth automatically.
     http = AuthorizedSession(credentials)
 
     # 3. Build the request body
     print(f"Notifying for: {target_url}")
-    content = {
-        'url': target_url,
-        'type': "URL_UPDATED"
-    }
+    content = {"url": target_url, "type": "URL_UPDATED"}
 
     # 4. Make the Request
-    # Note: We use .post() with the 'json' parameter. 
+    # Note: We use .post() with the 'json' parameter.
     # This automatically handles json.dumps and setting Content-Type headers.
     response = http.post(ENDPOINT, json=content)
 
@@ -39,7 +59,7 @@ try:
     # The response object has a .status_code and .json() method built-in
     print(f"Status Code: {response.status_code}")
     result = response.json()
-    
+
     print("Result:")
     print(json.dumps(result, indent=2))
 
