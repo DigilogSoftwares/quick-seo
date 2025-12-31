@@ -1,0 +1,17 @@
+services:
+  redis:
+    image: redis/redis-stack:7.4.0-v8
+    container_name: redis-stack
+    ports:
+      - "127.0.0.1:6379:6379" # bind to localhost ONLY
+      - "127.0.0.1:8001:8001" # Redis Insight
+    volumes:
+      - redis_data:/data
+    environment:
+      REDIS_ARGS: >
+        --requirepass strongpassword123
+        --appendonly yes
+        --protected-mode yes
+
+volumes:
+  redis_data:
