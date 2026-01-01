@@ -13,6 +13,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Auth {
+  // primary
+  id                 String       @id @default(uuid()) @db.Uuid
+
+  // shop/display details
+  shop               String      // e.g. myshop.example.com
+
+  // provider-specific configuration
+  googleConfig       Json       // store Google developer project JSON (maps to Postgres jsonb)
+  bingIndexingUrl    String      // URL used for Bing Indexing API
+
+  // flexible fields
+  settings           Json        // per-integration settings (retry, rate-limits, etc.)
+
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  @@index([shop])
+}
+
 model UrlEntry {
   id String @id @default(uuid())
 
