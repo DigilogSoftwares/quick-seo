@@ -3,6 +3,7 @@ import uuid
 import socket
 import asyncio
 import logging
+
 import redis.asyncio as redis
 from typing import Dict, List
 from collections import defaultdict
@@ -26,25 +27,34 @@ from db_model import (
     UrlIndexBatchJob,
 )
 
+from config import (
+    settings,
+    L1_GROUP,
+    L1_HASH_PATH,
+    L1_JOB_LIMIT,
+    L1_STREAM_PREFIX,
+    L2_HASH_PATH,
+    L2_STREAM_PREFIX,
+)
 
 # CONFIG
 AUTH_CACHE: Dict[str, Auth] = {}
 CentralAsyncSession: async_sessionmaker[AsyncSession]
 
-DATABASE_URL = "postgresql+asyncpg://postgres:123456789@localhost:5432/my_new_db"
+DATABASE_URL = settings.DATABASE_URL
 
-REDIS_PORT: int = 6379
-REDIS_PASS: str = "strongpassword123"
-REDIS_HOST: str = "localhost"
+REDIS_PORT: int = settings.REDIS_PORT
+REDIS_PASS: str = settings.REDIS_PASS
+REDIS_HOST: str = settings.REDIS_HOST
 
-HASH_PATH: str = "data-prep-msg"
-NEXT_HASH_PATH: str = "indexing-workers-msg"
+HASH_PATH: str = L1_HASH_PATH
+NEXT_HASH_PATH: str = L2_HASH_PATH
 
-STREAM_PREFIX = "stream:data-prep-agents"
-NEXT_STREAM_PREFIX = "stream:indexing-workers"
+STREAM_PREFIX = L1_STREAM_PREFIX
+NEXT_STREAM_PREFIX = L2_STREAM_PREFIX
 
-JOB_LIMIT = asyncio.Semaphore(2)
-GROUP = "job-workers"
+JOB_LIMIT = asyncio.Semaphore(L1_JOB_LIMIT)
+GROUP = L1_GROUP
 
 
 # Layer Specific
@@ -124,7 +134,7 @@ async def process_job(job_id, job, stream_name, msg_id):
                         load_only(
                             UrlEntry.originalUrl,  # type: ignore
                             UrlEntry.indexAction,  # type: ignore
-                            UrlEntry.attempts,     # type: ignore
+                            UrlEntry.attempts,  # type: ignore
                         )
                     )
                 )

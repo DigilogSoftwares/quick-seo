@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     REDIS_PORT: int = Field(alias="REDIS_PORT")
     REDIS_PASS: str = Field(alias="REDIS_PASS")
     REDIS_HOST: str = Field(alias="REDIS_HOST")
-    
+
     ENCRYPTION_KEY: str = Field(alias="ENCRYPT")
 
     @property
@@ -34,16 +34,16 @@ settings = Settings()  # type: ignore
 
 L1_JOB_LIMIT: int = 2
 L1_JOB_LIMIT: int = 4
-L1_JOB_LIMIT: int = 1
+L1_JOB_LIMIT: int = 1 
 
 L1_HASH_PATH: str = "data-prep-msg"
 L2_HASH_PATH: str = "indexing-workers-msg"
-L3_HASH_PATH: str = "indexing-workers-msg"
+L3_HASH_PATH: str = "status-sync-worker-msg"
 
 L1_STREAM_PREFIX: str = "stream:data-prep-agents"
 L2_STREAM_PREFIX: str = "stream:indexing-workers"
-L3_STREAM_PREFIX: str = "stream:indexing-workers"
+L3_STREAM_PREFIX: str = "stream:status-sync-worker"
 
-L1_GROUP: str = "job-workers"
-L2_GROUP: str = "job-workers"
-L3_GROUP: str = "job-workers"
+L1_GROUP: str = "L1-workers"
+L2_GROUP: str = "L2-workers"
+L3_GROUP: str = "L3-workers"
