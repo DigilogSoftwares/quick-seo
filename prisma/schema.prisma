@@ -15,61 +15,59 @@ datasource db {
 
 model Auth {
   // primary
-  id                 String       @id @default(uuid()) @db.Uuid
+  id String @id @default(uuid()) @db.Uuid
 
   // shop/display details
-  shop               String      // e.g. myshop.example.com
+  shop String // e.g. myshop.example.com
 
   // provider-specific configuration
-  googleConfig       Json       // store Google developer project JSON (maps to Postgres jsonb)
-  bingIndexingUrl    String      // URL used for Bing Indexing API
+  googleConfig String? @db.Text // store Google developer project encrypted JSON-String
+  bingApiKey   String? // URL used for Bing Indexing API
 
   // flexible fields
-  settings           Json        // per-integration settings (retry, rate-limits, etc.)
+  settings Json // per-integration settings (retry, rate-limits, etc.)
 
-  createdAt          DateTime     @default(now())
-  updatedAt          DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
+  @@unique([shop])
   @@index([shop])
 }
 
 model UrlEntry {
-  id String @id @default(uuid())
+  id String @id @default(uuid()) @db.Uuid
 
   // Shop context
-  shop String
-  productId BigInt
+  shop   String
+  baseId BigInt
 
   // URL identity
-  originalUrl String @db.Text
-
-  // Optional short link support
-  slug String? @unique
+  webUrl String @db.Text
 
   // Indexing control
-  indexAction   IndexAction @default(INDEX)
-  status        UrlStatus   @default(PENDING)
-  attempts      Int         @default(0)
+  indexAction IndexAction @default(INDEX)
+  status      UrlStatus   @default(PENDING)
+  attempts    Int         @default(2)
 
   // Timing
   submittedAt   DateTime  @default(now())
   lastEventAt   DateTime  @updatedAt // webhook activity
   lastTriedAt   DateTime?
-  lastIndexedAt DateTime?
-  processedAt   DateTime?
-
-  // Optional optimization
-  // contentHash    String?  // detect meaningful changes
+  lastIndexedAt DateTime  @default(now())
 
   // Flexible metadata
   metadata Json?
 
   // Constraints & indexes
-  @@unique([shop, originalUrl])
-  @@unique([shop, productId])
+  @@unique([shop, webUrl])
+  @@unique([shop, baseId])
   @@index([shop])
   @@index([status])
   @@index([indexAction])
+  // New performance-focused ordered indexes
+  @@index([lastIndexedAt(sort: Asc), attempts(sort: Asc)])
+  // Often better in practice if you also filter by shop/status
+  @@index([shop, status, lastIndexedAt(sort: Asc), attempts(sort: Asc)])
 }
 
 enum UrlStatus {

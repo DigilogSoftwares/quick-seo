@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Auth" ALTER COLUMN "googleConfig" DROP NOT NULL,
+ALTER COLUMN "bingApiKey" DROP NOT NULL;
