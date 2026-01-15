@@ -42,14 +42,22 @@ class Auth(Base):
     createdAt = Column(DateTime)
     updatedAt = Column(DateTime)
 
+    def to_dict(self) -> dict:
+        return {
+            "shop": self.shop,
+            "googleConfig": self.googleConfig,
+            "bingIndexingUrl": self.bingIndexingUrl,
+            "settings": self.settings,
+        }
+
 
 class UrlEntry(Base):
     __tablename__ = "UrlEntry"
 
     id = Column(String, primary_key=True)
     shop = Column(String, index=True, nullable=False)
-    productId = Column(BigInteger, nullable=False)
-    originalUrl = Column(Text, nullable=False)
+    baseId = Column(BigInteger, nullable=False)
+    webUrl = Column(Text, nullable=False)
     slug = Column(String)
 
     indexAction = Column(SQLEnum(IndexAction, name="indexaction"), index=True)
@@ -72,11 +80,27 @@ class UrlItem:
     originalUrl: str
     attempts: int
 
+    def to_dict(self) -> dict:
+        return {
+            "originalUrl": self.originalUrl,
+            "attempts": self.attempts,
+        }
+
 
 @dataclass
 class UrlIndexBatchJob:
     jobType: Literal["URL_INDEXING_BATCH"]
     version: int
     # provider: Literal["BING", "GOOGLE"]
-    actions: Dict[IndexActionStr, List[UrlItem]]
+    actions: Dict[IndexActionStr, List[Dict]]
+    auth: Auth
     shop: str
+
+    def to_dict(self) -> dict:
+        return {
+            "jobType": self.jobType,
+            "version": self.version,
+            "shop": self.shop,
+            "actions": self.actions,
+            "auth": self.auth,
+        }

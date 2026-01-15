@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     REDIS_HOST: str = Field(alias="REDIS_HOST")
 
     ENCRYPTION_KEY: str = Field(alias="ENCRYPT")
+    JOINT_KEY: str = Field(alias="JOINT_KEY")
 
     @property
     def store(self) -> dict[str, str]:
@@ -33,8 +34,8 @@ settings = Settings()  # type: ignore
 
 
 L1_JOB_LIMIT: int = 2
-L1_JOB_LIMIT: int = 4
-L1_JOB_LIMIT: int = 1 
+L2_JOB_LIMIT: int = 4
+L3_JOB_LIMIT: int = 1
 
 L1_HASH_PATH: str = "data-prep-msg"
 L2_HASH_PATH: str = "indexing-workers-msg"

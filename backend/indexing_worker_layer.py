@@ -9,14 +9,6 @@ from typing import Dict, List
 from collections import defaultdict
 from datetime import datetime, timezone
 
-from sqlalchemy.orm import load_only
-from sqlalchemy import desc, select, String
-from sqlalchemy.ext.asyncio import (
-    AsyncSession,
-    async_sessionmaker,
-    create_async_engine,
-)
-
 from db_model import (
     Auth,
     UrlItem,
@@ -29,46 +21,29 @@ from db_model import (
 
 from config import (
     settings,
-    L1_GROUP,
-    L1_HASH_PATH,
-    L1_JOB_LIMIT,
-    L1_STREAM_PREFIX,
+    L2_GROUP,
     L2_HASH_PATH,
+    L2_JOB_LIMIT,
     L2_STREAM_PREFIX,
+    L3_HASH_PATH,
+    L3_STREAM_PREFIX,
 )
 
 # CONFIG
-AUTH_CACHE: Dict[str, Auth] = {}
-CentralAsyncSession: async_sessionmaker[AsyncSession]
-
-DATABASE_URL = settings.DATABASE_URL
-
 REDIS_PORT: int = settings.REDIS_PORT
 REDIS_PASS: str = settings.REDIS_PASS
 REDIS_HOST: str = settings.REDIS_HOST
 
-HASH_PATH: str = L1_HASH_PATH
-NEXT_HASH_PATH: str = L2_HASH_PATH
+HASH_PATH: str = L2_HASH_PATH
+NEXT_HASH_PATH: str = L3_HASH_PATH
 
-STREAM_PREFIX = L1_STREAM_PREFIX
-NEXT_STREAM_PREFIX = L2_STREAM_PREFIX
+STREAM_PREFIX = L2_STREAM_PREFIX
+NEXT_STREAM_PREFIX = L3_STREAM_PREFIX
 
-JOB_LIMIT = asyncio.Semaphore(L1_JOB_LIMIT)
-GROUP = L1_GROUP
-
+JOB_LIMIT = asyncio.Semaphore(L2_JOB_LIMIT)
+GROUP = L2_GROUP
 
 # Layer Specific
-
-
-engine = create_async_engine(
-    DATABASE_URL,
-    pool_size=2,
-    max_overflow=10,
-    pool_pre_ping=True,
-)
-
-CentralAsyncSession = async_sessionmaker(engine, expire_on_commit=False)
-
 
 # Set up logging for better visibility
 logging.basicConfig(
@@ -93,92 +68,22 @@ async def process_job(job_id, job, stream_name, msg_id):
                 logger.error("Invalid Request 'shop' not present in job")
                 return
 
-            auth = AUTH_CACHE.get(shop, None)
-            async with CentralAsyncSession() as session:
-                # Example query (adjust table/columns as needed)
-                if not auth:
-                    stmt = select(Auth).where(Auth.shop == shop)
-                    result = await session.execute(stmt)
 
-                    auth = result.scalar_one_or_none()
+            # BATCH OPERATION HERE 
 
-                    if not auth:
-                        logger.error(f"No Auth found for shop: {shop}")
-                        return
 
-                print("Shop:", shop)
-                bing_index_limit = auth.settings.get("bingLimit", 200)
-                google_index_limit = auth.settings.get("googleLimit", 200)
 
-                final_limit = max(bing_index_limit, google_index_limit)
-                final_limit = int(
-                    final_limit * 1.05
-                )  # Adding 5% more to test exceed limits and for reject cases while indexing
 
-                stmt = (
-                    select(UrlEntry)
-                    .where(
-                        UrlEntry.shop == shop,
-                        # UrlEntry.status.cast(String) == "PENDING",
-                        UrlEntry.status.cast(String) == UrlStatus.PENDING.value,
-                        # UrlEntry.indexAction.cast(String) != "IGNORE",
-                        UrlEntry.indexAction.cast(String) != IndexAction.IGNORE.value,
-                    )
-                    .order_by(
-                        desc(UrlEntry.attempts),
-                        # asc(UrlEntry.submittedAt),
-                        # asc(UrlEntry.id),
-                    )
-                    .limit(final_limit)
-                    .options(
-                        load_only(
-                            UrlEntry.originalUrl,  # type: ignore
-                            UrlEntry.indexAction,  # type: ignore
-                            UrlEntry.attempts,  # type: ignore
-                        )
-                    )
-                )
 
-            result = await session.execute(stmt)
-            url_entries = result.scalars().all()
 
-            # DEBUG PURPOSE
-            print(f"URLS: {len(url_entries)}\n")
-            print([url.originalUrl for url in url_entries])
-            print([url.indexAction.value for url in url_entries])
-            print([url.attempts for url in url_entries])
-            print("\n")
 
-            actions: Dict[IndexActionStr, List[dict]] = defaultdict(list)
-
-            for row in url_entries:
-                action = row.indexAction.value  # Enum → string
-                if action not in ("INDEX", "DELETE"):
-                    # TODO: Add Flag to see
-                    continue
-
-                actions[action].append(
-                    UrlItem(
-                        originalUrl=row.originalUrl, attempts=row.attempts      # type: ignore
-                    ).to_dict()
-                )
-
-            next_job_hash = UrlIndexBatchJob(
-                jobType="URL_INDEXING_BATCH",
-                version=1,  # Need to define ...
-                actions=dict(actions),
-                shop=shop,
-                auth=auth.to_dict(),
-            )
-            print("job \n\n")
-            print(next_job_hash)
 
             next_job_id = str(uuid.uuid4())
 
             await r.hset(
                 f"{NEXT_HASH_PATH}:{next_job_id}",
                 mapping={
-                    "data": json.dumps(next_job_hash.to_dict()),
+                    "data": json.dumps({}, default=lambda o: o.__dict__),
                     "status": "queued",
                     "created_at": datetime.now(timezone.utc).isoformat(),
                 },
@@ -281,4 +186,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         logger.info("Worker stopped manually.")
     finally:
-        asyncio.run(engine.dispose())
+        pass
