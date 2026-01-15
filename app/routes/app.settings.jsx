@@ -3,7 +3,6 @@ import prisma from "../db.server";
 import { useEffect } from "react";
 import { useFetcher } from "react-router";
 import { authenticate } from "../shopify.server";
-// import { Form, useActionData } from "react-router-dom";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { useLoaderData, useRouteError } from "react-router";
 import { encrypt, decrypt } from "../functions/auth";
@@ -157,7 +156,6 @@ export async function action({ request }) {
 
   if (shopSettingsJSON) {
     try {
-      // **FIX: Parse the JSON string**
       const parsedSettings = JSON.parse(shopSettingsJSON);
       updateData.settings = parsedSettings;
       hasChanges = true;
@@ -191,10 +189,23 @@ export async function action({ request }) {
     });
 
     console.log("Successfully updated settings for shop:", session.shop);
-    return { success: true };
+    return new Response(
+      JSON.stringify({ success: true, message: "Settings Updated !" }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   } else {
     console.log("No changes detected, skipping database update");
-    return { success: true, message: "No changes to save" };
+
+    return new Response(
+      JSON.stringify({ success: true, message: "No changes to save" }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 }
 
@@ -292,6 +303,12 @@ export default function SettingsPage() {
       setBingStatus("failed");
     }
   }
+
+  useEffect(() => {
+    if (fetcher.data?.success) {
+      shopify.toast.show("Settings Saved");
+    }
+  }, [fetcher.data?.success, shopify]);
 
   // // optional toast when saved
   // if (result?.success) {

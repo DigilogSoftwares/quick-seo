@@ -16,12 +16,11 @@ export default function App() {
   return (
     <AppProvider embedded apiKey={apiKey}>
       <s-app-nav>
-        <s-link href="/app/mainpage">HOME</s-link>
-        <s-link href="/app/pagey">URL SUBMISSION</s-link>
-        <s-link href="/app/playground">Pricing </s-link>
-        <s-link href="/app/dep">setting</s-link>
         <s-link href="/app">Home</s-link>
-        <s-link href="/app/index">Home2</s-link>
+        <s-link href="/app/submit-url">Url Submission</s-link>
+        <s-link href="/app/plan-pricing">Pricing </s-link>
+        <s-link href="/app/settings">Settings</s-link>
+        {/* <s-link href="/app/coming-soon">Coming Soon</s-link> */}
       </s-app-nav>
       <Outlet />
     </AppProvider>

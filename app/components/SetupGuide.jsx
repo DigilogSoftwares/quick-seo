@@ -3,7 +3,8 @@ import styles from "./SetupGuide.module.css";
 
 export const SetupGuide = ({ onDismiss, onStepComplete, items }) => {
   const [expanded, setExpanded] = useState(
-    items.findIndex((item) => !item.complete),
+    // items.findIndex((item) => !item.complete),
+    items.find((item) => !item.complete)?.id ?? null,
   );
   const [isGuideOpen, setIsGuideOpen] = useState(true);
   const accessId = useId();
@@ -177,113 +178,111 @@ const SetupItem = ({
   };
 
   return (
-    <s-clickable borderRadius="small">
-      <s-box
-        borderRadius="small"
-        background={expanded ? "subdued" : undefined}
-        paddingBlockStart="small-400"
-        paddingInline="small-300"
-        paddingBlockEnd="small-400"
+    <s-box
+      borderRadius="small"
+      background={expanded ? "subdued" : undefined}
+      paddingBlockStart="small-400"
+      paddingInline="small-300"
+      paddingBlockEnd="small-400"
+    >
+      <s-grid
+        gridTemplateColumns="auto 1fr"
+        alignItems="start"
+        columnGap="small"
       >
-        <s-grid
-          gridTemplateColumns="auto 1fr"
-          alignItems="start"
-          columnGap="small"
-        >
-          <s-grid-item>
-            <s-tooltip id="complete-tooltip">
-              {complete ? "Mark as not done" : "Mark as done"}
-            </s-tooltip>
-            <s-clickable onClick={completeItem} interestFor="complete-tooltip">
-              <div className={styles.completeButton}>
-                {loading ? (
-                  <s-spinner size="small" />
-                ) : complete ? (
-                  <div
-                    style={{
-                      width: "1.25rem",
-                      height: "1.25rem",
-                      borderRadius: "100%",
-                      background: "#303030",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      fill: "#fff",
-                      color: "#fff",
-                    }}
-                  >
-                    {checkSvg}
-                  </div>
-                ) : (
-                  outlineSvg
-                )}
-              </div>
-            </s-clickable>
-          </s-grid-item>
-          <s-grid-item>
-            <div
-              className={styles.itemContent}
-              onClick={expanded ? () => null : setExpanded}
-              style={{
-                cursor: expanded ? "default" : "pointer",
-                paddingBlockStart: "2px",
-              }}
-            >
-              <s-stack direction="block" id={id}>
-                {expanded ? (
-                  <s-heading>{title}</s-heading>
-                ) : (
-                  <s-text>{title}</s-text>
-                )}
+        <s-grid-item>
+          <s-tooltip id="complete-tooltip">
+            {complete ? "Mark as not done" : "Mark as done"}
+          </s-tooltip>
+          <s-clickable onClick={completeItem} interestFor="complete-tooltip">
+            <div className={styles.completeButton}>
+              {loading ? (
+                <s-spinner size="small" />
+              ) : complete ? (
                 <div
                   style={{
-                    display: "grid",
-                    gridTemplateRows: expanded ? "1fr" : "0fr",
-                    transition: "grid-template-rows 0.1s ease-out",
+                    width: "1.25rem",
+                    height: "1.25rem",
+                    borderRadius: "100%",
+                    background: "#303030",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    fill: "#fff",
+                    color: "#fff",
                   }}
                 >
-                  <div style={{ overflow: "hidden" }}>
-                    <s-box paddingBlockStart="small" paddingBlockEnd="small">
-                      <s-stack direction="block" gap="large">
-                        <s-text>{description}</s-text>
-                        {primaryButton || secondaryButton ? (
-                          <s-stack direction="inline" gap="base">
-                            {primaryButton ? (
-                              <s-button
-                                variant="primary"
-                                {...primaryButton.props}
-                              >
-                                {primaryButton.content}
-                              </s-button>
-                            ) : null}
-                            {secondaryButton ? (
-                              <s-button
-                                variant="tertiary"
-                                {...secondaryButton.props}
-                              >
-                                {secondaryButton.content}
-                              </s-button>
-                            ) : null}
-                          </s-stack>
-                        ) : null}
-                      </s-stack>
-                    </s-box>
-                  </div>
+                  {checkSvg}
                 </div>
-              </s-stack>
-              {image && expanded ? ( // hide image at 700px down
-                <img
-                  className={styles.itemImage}
-                  src={image.url}
-                  alt={image.alt}
-                  style={{ maxHeight: "7.75rem" }}
-                />
-              ) : null}
+              ) : (
+                outlineSvg
+              )}
             </div>
-          </s-grid-item>
-        </s-grid>
-      </s-box>
-    </s-clickable>
+          </s-clickable>
+        </s-grid-item>
+        <s-grid-item>
+          <div
+            className={styles.itemContent}
+            onClick={expanded ? () => null : setExpanded}
+            style={{
+              cursor: expanded ? "default" : "pointer",
+              paddingBlockStart: "2px",
+            }}
+          >
+            <s-stack direction="block" id={id}>
+              {expanded ? (
+                <s-heading>{title}</s-heading>
+              ) : (
+                <s-text>{title}</s-text>
+              )}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateRows: expanded ? "1fr" : "0fr",
+                  transition: "grid-template-rows 0.1s ease-out",
+                }}
+              >
+                <div style={{ overflow: "hidden" }}>
+                  <s-box paddingBlockStart="small" paddingBlockEnd="small">
+                    <s-stack direction="block" gap="large">
+                      <s-text>{description}</s-text>
+                      {primaryButton || secondaryButton ? (
+                        <s-stack direction="inline" gap="base">
+                          {primaryButton ? (
+                            <s-button
+                              variant="primary"
+                              {...primaryButton.props}
+                            >
+                              {primaryButton.content}
+                            </s-button>
+                          ) : null}
+                          {secondaryButton ? (
+                            <s-button
+                              variant="tertiary"
+                              {...secondaryButton.props}
+                            >
+                              {secondaryButton.content}
+                            </s-button>
+                          ) : null}
+                        </s-stack>
+                      ) : null}
+                    </s-stack>
+                  </s-box>
+                </div>
+              </div>
+            </s-stack>
+            {image && expanded ? ( // hide image at 700px down
+              <img
+                className={styles.itemImage}
+                src={image.url}
+                alt={image.alt}
+                style={{ maxHeight: "7.75rem" }}
+              />
+            ) : null}
+          </div>
+        </s-grid-item>
+      </s-grid>
+    </s-box>
   );
 };
 

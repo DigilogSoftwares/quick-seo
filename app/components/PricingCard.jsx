@@ -4,6 +4,7 @@ export const PricingCard = ({
   price,
   features,
   featuredText,
+  unfeaturedText,
   button,
   frequency,
 }) => {
@@ -27,6 +28,18 @@ export const PricingCard = ({
           }}
         >
           <s-badge tone="success">{featuredText}</s-badge>
+        </div>
+      ) : null}
+      {unfeaturedText ? (
+        <div
+          style={{
+            position: "absolute",
+            top: "-10px",
+            right: "6px",
+            zIndex: "100",
+          }}
+        >
+          <s-badge tone="warning">{unfeaturedText}</s-badge>
         </div>
       ) : null}
       <s-section padding="base">
