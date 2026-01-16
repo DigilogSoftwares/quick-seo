@@ -61,7 +61,7 @@ export const loader = async ({ request }) => {
     bingLimit: 10000,
     retryLimit: 3,
     googleLimit: 200,
-    contentTypePreferences: [],
+    contentTypePreferences: ["products", "blog_posts", "collections", "pages"],
   };
 
   if (auth?.settings) {
