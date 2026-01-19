@@ -1,5 +1,5 @@
 import { authenticate } from "../shopify.server";
-import db from "../db.server";
+// import db from "../db.server";
 
 export const action = async ({ request }) => {
   console.log(`Received webhook on BACKEND`);
