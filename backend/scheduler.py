@@ -51,7 +51,7 @@ def schedule_job(
 if __name__ == "__main__":
     for priority in ["normal"]:
         schedule_job(
-            store_name="weldingsolution.pk",
+            store_name="app-development-store-grow.myshopify.com",
             action="index.urls",
             priority=priority,
             payload={

@@ -7,7 +7,9 @@ from typing import List
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = Field(alias="PRISMA_DATABASE_URL")
+    # DATABASE_URL: str = Field(alias="DATABASE_URL")
+    SUPABASE_URL: str = Field(alias="SUPABASE_URL")
+    SUPABASE_KEY: str = Field(alias="SUPABASE_KEY")
 
     REDIS_PORT: int = Field(alias="REDIS_PORT")
     REDIS_PASS: str = Field(alias="REDIS_PASS")
