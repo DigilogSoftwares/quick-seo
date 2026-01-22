@@ -1,4 +1,7 @@
 {
+    "Input of Layer 2"
+}
+{
     "jobType": "URL_INDEXING_BATCH",
     "version": 1,
     "shop": "app-development-store-grow.myshopify.com",
@@ -33,5 +36,168 @@
         },
         "createdAt": "2026-01-19T12:23:59.83",
         "updatedAt": "2026-01-19T12:23:59.83"
+    }
+}
+{
+    "Output of Layer 2"
+}
+{
+    "google": {
+        "executed": true,
+        "success": true,
+        "result": {
+            "success": true,
+            "job_type": "URL_INDEXING_BATCH",
+            "shop": "app-development-store-grow.myshopify.com",
+            "results": {
+                "total_urls": 10,
+                "successful": 10,
+                "failed": 0,
+                "quota_exceeded": 0,
+                "skipped": 0,
+                "start_time": "2026-01-22T06:38:53.755705",
+                "end_time": "2026-01-22T11:38:56.693832",
+                "results": [
+                    {
+                        "url": "https://app-development-store-grow.myshopify.com/products/blue-1m-solderable-wire-hard-wires-for-wiring-jumper-wire-wiring-cable",
+                        "action": "URL_UPDATED",
+                        "status": "success",
+                        "attempts": 1,
+                        "error_message": null,
+                        "http_status": 200,
+                        "timestamp": "2026-01-22T11:38:56.691107"
+                    },
+                    {
+                        "url": "https://app-development-store-grow.myshopify.com/products/18650-battery-holder-4x5-cell-18650-batteries-spacer-holders-radiating-plastic-holder-bracket-for-diy-battery-pack",
+                        "action": "URL_UPDATED",
+                        "status": "success",
+                        "attempts": 1,
+                        "error_message": null,
+                        "http_status": 200,
+                        "timestamp": "2026-01-22T11:38:56.691391"
+                    },
+                    {
+                        "url": "https://app-development-store-grow.myshopify.com/products/tsop-sensor-1838-ir-receiver",
+                        "action": "URL_UPDATED",
+                        "status": "success",
+                        "attempts": 1,
+                        "error_message": null,
+                        "http_status": 200,
+                        "timestamp": "2026-01-22T11:38:56.691705"
+                    },
+                    {
+                        "url": "https://app-development-store-grow.myshopify.com/products/domestic-cable-60227-3-ks-c-iec-02-kiv-2-5sqmm-red-1m",
+                        "action": "URL_UPDATED",
+                        "status": "success",
+                        "attempts": 1,
+                        "error_message": null,
+                        "http_status": 200,
+                        "timestamp": "2026-01-22T11:38:56.691984"
+                    },
+                    {
+                        "url": "https://app-development-store-grow.myshopify.com/products/lm2596hv-dc-dc-step-down-power-module",
+                        "action": "URL_UPDATED",
+                        "status": "success",
+                        "attempts": 1,
+                        "error_message": null,
+                        "http_status": 200,
+                        "timestamp": "2026-01-22T11:38:56.692280"
+                    },
+                    {
+                        "url": "https://app-development-store-grow.myshopify.com/products/5mm-flat-top-wide-angle-orange-amber-led-wide-angle",
+                        "action": "URL_UPDATED",
+                        "status": "success",
+                        "attempts": 1,
+                        "error_message": null,
+                        "http_status": 200,
+                        "timestamp": "2026-01-22T11:38:56.692657"
+                    },
+                    {
+                        "url": "https://app-development-store-grow.myshopify.com/products/yellow-1m-solderable-wire-hard-wires-for-wiring-jumper-wire-wiring-cable",
+                        "action": "URL_UPDATED",
+                        "status": "success",
+                        "attempts": 1,
+                        "error_message": null,
+                        "http_status": 200,
+                        "timestamp": "2026-01-22T11:38:56.692969"
+                    },
+                    {
+                        "url": "https://app-development-store-grow.myshopify.com/products/acer-laptop-charger-19v-4-74a-with-cable",
+                        "action": "URL_UPDATED",
+                        "status": "success",
+                        "attempts": 1,
+                        "error_message": null,
+                        "http_status": 200,
+                        "timestamp": "2026-01-22T11:38:56.693235"
+                    },
+                    {
+                        "url": "https://app-development-store-grow.myshopify.com/products/black-1m-solderable-wire-hard-wires-for-wiring-jumper-wire-wiring-cable",
+                        "action": "URL_UPDATED",
+                        "status": "success",
+                        "attempts": 1,
+                        "error_message": null,
+                        "http_status": 200,
+                        "timestamp": "2026-01-22T11:38:56.693516"
+                    },
+                    {
+                        "url": "https://app-development-store-grow.myshopify.com/products/titan-dc-power-supply-3010d-30v-10a",
+                        "action": "URL_UPDATED",
+                        "status": "success",
+                        "attempts": 1,
+                        "error_message": null,
+                        "http_status": 200,
+                        "timestamp": "2026-01-22T11:38:56.693711"
+                    }
+                ]
+            }
+        }
+    },
+    "bing": {
+        "executed": true,
+        "success": true,
+        "result": {
+            "success": true,
+            "job_type": "URL_INDEXING_BATCH",
+            "shop": "app-development-store-grow.myshopify.com",
+            "results": {
+                "total_urls": 10,
+                "total_batches": 1,
+                "successful_batches": 1,
+                "failed_batches": 0,
+                "successful_urls": 10,
+                "failed_urls": 0,
+                "quota_exceeded": 0,
+                "rate_limited": 0,
+                "skipped": 0,
+                "start_time": "2026-01-22T06:38:52.496723",
+                "end_time": "2026-01-22T06:38:53.754905",
+                "results": [
+                    {
+                        "batch_number": 1,
+                        "urls": [
+                            "https://app-development-store-grow.myshopify.com/products/blue-1m-solderable-wire-hard-wires-for-wiring-jumper-wire-wiring-cable",
+                            "https://app-development-store-grow.myshopify.com/products/18650-battery-holder-4x5-cell-18650-batteries-spacer-holders-radiating-plastic-holder-bracket-for-diy-battery-pack",
+                            "https://app-development-store-grow.myshopify.com/products/tsop-sensor-1838-ir-receiver",
+                            "https://app-development-store-grow.myshopify.com/products/domestic-cable-60227-3-ks-c-iec-02-kiv-2-5sqmm-red-1m",
+                            "https://app-development-store-grow.myshopify.com/products/lm2596hv-dc-dc-step-down-power-module",
+                            "https://app-development-store-grow.myshopify.com/products/5mm-flat-top-wide-angle-orange-amber-led-wide-angle",
+                            "https://app-development-store-grow.myshopify.com/products/yellow-1m-solderable-wire-hard-wires-for-wiring-jumper-wire-wiring-cable",
+                            "https://app-development-store-grow.myshopify.com/products/acer-laptop-charger-19v-4-74a-with-cable",
+                            "https://app-development-store-grow.myshopify.com/products/black-1m-solderable-wire-hard-wires-for-wiring-jumper-wire-wiring-cable",
+                            "https://app-development-store-grow.myshopify.com/products/titan-dc-power-supply-3010d-30v-10a"
+                        ],
+                        "url_count": 10,
+                        "status": "success",
+                        "attempts": 1,
+                        "error_message": null,
+                        "http_status": 200,
+                        "response_data": {
+                            "d": null
+                        },
+                        "timestamp": "2026-01-22T06:38:53.754274"
+                    }
+                ]
+            }
+        }
     }
 }
