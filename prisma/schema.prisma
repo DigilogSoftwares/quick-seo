@@ -9,8 +9,8 @@ generator client {
 // enough when changing adapters.
 // See https://www.prisma.io/docs/orm/reference/prisma-schema-reference#string for more information
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -49,6 +49,10 @@ model UrlEntry {
   indexAction IndexAction @default(INDEX)
   status      UrlStatus   @default(PENDING)
   attempts    Int         @default(2)
+
+  // Search engine indexing flags
+  isGoogleIndexed Boolean @default(false)
+  isBingIndexed   Boolean @default(false)
 
   // Timing
   submittedAt   DateTime  @default(now())
