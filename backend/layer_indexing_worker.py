@@ -6,6 +6,7 @@ import logging
 import logging.handlers
 import signal
 import sys
+import os
 from typing import Optional
 from datetime import datetime, timezone
 
@@ -48,6 +49,9 @@ JOB_LIMIT = asyncio.Semaphore(L2_JOB_LIMIT)
 GROUP = L2_GROUP
 CONSUMER = f"{socket.gethostname()}-{uuid.uuid4().hex[:8]}"  # Unique consumer ID
 
+LOG_FILE = os.path.join("./logs", "worker_l2.log")
+
+
 # Timeouts
 REDIS_TIMEOUT = 10  # seconds
 GRACEFUL_SHUTDOWN_TIMEOUT = 30  # seconds
@@ -61,7 +65,7 @@ logging.basicConfig(
     handlers=[
         logging.StreamHandler(sys.stdout),
         logging.handlers.RotatingFileHandler(
-            "worker_l2.log", maxBytes=50_000_000, backupCount=5
+            LOG_FILE, maxBytes=50_000_000, backupCount=5
         ),
     ],
 )

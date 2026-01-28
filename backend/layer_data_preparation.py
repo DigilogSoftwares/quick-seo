@@ -6,6 +6,7 @@ import logging
 import logging.handlers
 import signal
 import sys
+import os
 from typing import Dict, List, Optional, Tuple
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -56,6 +57,7 @@ NEXT_STREAM_PREFIX = L2_STREAM_PREFIX
 JOB_LIMIT = asyncio.Semaphore(L1_JOB_LIMIT)
 GROUP = L1_GROUP
 CONSUMER = f"{socket.gethostname()}-{uuid.uuid4().hex[:8]}"  # Unique consumer ID
+LOG_FILE = os.path.join("./logs", "worker_l1.log")
 
 # Timeouts
 SUPABASE_TIMEOUT = 30  # seconds
@@ -65,6 +67,7 @@ GRACEFUL_SHUTDOWN_TIMEOUT = 30  # seconds
 # ============================================================================
 # LOGGING SETUP
 # ============================================================================
+os.makedirs("./logs", exist_ok=True)  # Make Sure it Exists
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s",
@@ -72,7 +75,7 @@ logging.basicConfig(
         logging.StreamHandler(sys.stdout),
         # Add file handler for production
         logging.handlers.RotatingFileHandler(
-            "worker.log", maxBytes=50_000_000, backupCount=5
+            LOG_FILE, maxBytes=50_000_000, backupCount=5
         ),
     ],
 )
@@ -565,11 +568,11 @@ async def recovery_loop():
     while not shutdown_event.is_set():
         try:
             # Check for messages pending for more than 1 minute
-            pending = await r.xpending_range(STREAM_PREFIX, GROUP, "-", "+", 10) # type: ignore
+            pending = await r.xpending_range(STREAM_PREFIX, GROUP, "-", "+", 10)  # type: ignore
             for item in pending:
                 if item["idle"] > 60000:  # 60 seconds
                     # Re-claim the message to process it
-                    await r.xclaim( # type: ignore
+                    await r.xclaim(  # type: ignore
                         STREAM_PREFIX, GROUP, CONSUMER, 60000, [item["message_id"]]
                     )
             await asyncio.sleep(60)

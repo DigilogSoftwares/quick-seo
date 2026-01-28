@@ -5,6 +5,7 @@ import logging
 import logging.handlers
 import signal
 import sys
+import os
 from typing import Dict, List, Optional, Set
 from datetime import datetime, timezone, timedelta
 from collections import defaultdict
@@ -47,6 +48,8 @@ SCHEDULE_STATE_KEY = "scheduler:state"  # Hash: shop -> last_run_timestamp
 DAILY_RUN_COUNT_KEY = "scheduler:daily_runs"  # Hash: shop:date -> run_count
 SCHEDULER_STATS_KEY = "scheduler:stats"  # Hash: various stats
 
+LOG_FILE = os.path.join("./logs", "scheduler.log")
+
 # Timeouts
 SUPABASE_TIMEOUT = 30  # seconds
 REDIS_TIMEOUT = 10  # seconds
@@ -61,7 +64,7 @@ logging.basicConfig(
     handlers=[
         logging.StreamHandler(sys.stdout),
         logging.handlers.RotatingFileHandler(
-            "scheduler.log", maxBytes=50_000_000, backupCount=5
+            LOG_FILE, maxBytes=50_000_000, backupCount=5
         ),
     ],
 )

@@ -6,6 +6,7 @@ import logging
 import logging.handlers
 import signal
 import sys
+import os
 from datetime import datetime, timezone
 from supabase import create_client, Client
 from typing import List, Optional, Dict, Any
@@ -44,6 +45,9 @@ JOB_LIMIT = asyncio.Semaphore(L3_JOB_LIMIT)
 GROUP = L3_GROUP
 CONSUMER = f"{socket.gethostname()}-{uuid.uuid4().hex[:8]}"  # Unique consumer ID
 
+LOG_FILE = os.path.join("./logs", "worker_l3.log")
+
+
 # Timeouts
 SUPABASE_TIMEOUT = 30  # seconds
 REDIS_TIMEOUT = 10  # seconds
@@ -58,7 +62,7 @@ logging.basicConfig(
     handlers=[
         logging.StreamHandler(sys.stdout),
         logging.handlers.RotatingFileHandler(
-            "worker_l3.log", maxBytes=50_000_000, backupCount=5
+            LOG_FILE, maxBytes=50_000_000, backupCount=5
         ),
     ],
 )
