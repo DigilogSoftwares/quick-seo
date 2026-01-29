@@ -58,6 +58,8 @@ GRACEFUL_SHUTDOWN_TIMEOUT = 30  # seconds
 # ============================================================================
 # LOGGING SETUP
 # ============================================================================
+os.makedirs("./logs", exist_ok=True)  # Make Sure it Exists
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s",

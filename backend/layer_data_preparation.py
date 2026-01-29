@@ -185,6 +185,7 @@ def fetch_auth_and_urls(shop: str) -> Tuple[Optional[Auth], List[UrlEntry]]:
                 .select("webUrl, indexAction, attempts")
                 .eq("shop", shop)
                 .eq("status", UrlStatus.PENDING.value)
+                .eq("isGoogleIndexed", False) 
                 .neq("indexAction", IndexAction.IGNORE.value)
                 .order("attempts", desc=True)
                 .limit(final_limit)
