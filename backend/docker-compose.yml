@@ -1,10 +1,10 @@
 services:
-  redis:
+  redis-stack:
     image: redis/redis-stack:7.4.0-v8
     container_name: redis-stack
     ports:
       - "127.0.0.1:6379:6379" # bind to localhost ONLY
-      - "127.0.0.1:8001:8001" # Redis Insight
+      - "8001:8001" # Redis Insight | Open to see working details
     volumes:
       - redis_data:/data
     environment:
@@ -12,13 +12,13 @@ services:
         --requirepass strongpassword123
         --appendonly yes
         --protected-mode yes
-  
+
   workers:
     build: .
     depends_on:
-      - redis
+      - redis-stack
     volumes:
-      - logs:/app/logs   # container path
+      - logs:/app/logs # container path
 
     restart: unless-stopped
 
